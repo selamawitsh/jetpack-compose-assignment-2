@@ -1,13 +1,11 @@
 package com.example.todoapp.ui
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -22,7 +20,7 @@ fun DetailScreen(todoId: Int, navController: NavController, viewModel: TodoViewM
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Todo Detail") },
+                title = { Text("Todo Details") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -31,18 +29,54 @@ fun DetailScreen(todoId: Int, navController: NavController, viewModel: TodoViewM
             )
         }
     ) { paddingValues ->
-        todo?.let {
-            Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
-                Text("Title: ${it.title}", style = MaterialTheme.typography.titleMedium)
-                Text("Status: ${if (it.completed) "Completed" else "Pending"}", style = MaterialTheme.typography.bodyMedium)
-                Text("User ID: ${it.userId}", style = MaterialTheme.typography.bodyMedium)
-                Text("Todo ID: ${it.id}", style = MaterialTheme.typography.bodyMedium)
-            }
-        } ?: Text(
-            "Todo not found.",
-            modifier = Modifier.padding(16.dp),
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            todo?.let {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight(),
+                    elevation = CardDefaults.cardElevation(6.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Text(
+                            text = " ${it.title}",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        InfoRow(label = "Status", value = if (it.completed) "✅ Completed" else "⌛ Pending")
+                        InfoRow(label = "User ID", value = it.userId.toString())
+                        InfoRow(label = "Todo ID", value = it.id.toString())
+                    }
+                }
+            } ?: Text(
+                text = "Todo not found.",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
     }
 }
+
+@Composable
+fun InfoRow(label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = "$label:", style = MaterialTheme.typography.bodyMedium)
+        Text(text = value, style = MaterialTheme.typography.bodyMedium)
+    }
+}
+
 

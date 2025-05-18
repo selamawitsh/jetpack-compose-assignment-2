@@ -83,7 +83,7 @@ fun ListScreen(navController: NavController, viewModel: TodoViewModel) {
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text(
-                                        text = if (todo.completed) "✅ Completed" else "⏳ Pending",
+                                        text = if (todo.completed) " Completed" else " Pending",
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = if (todo.completed) Color(0xFF2E7D32) else Color(0xFFB25F00)
                                     )
